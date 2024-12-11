@@ -1,5 +1,5 @@
 import * as qs from "qs";
-import axios, {AxiosRequestConfig, AxiosResponse, AxiosInstance} from "axios";
+import axios, {AxiosRequestConfig, AxiosResponse, AxiosInstance, InternalAxiosRequestConfig} from "axios";
 import FormData from "form-data";
 import {DataResolverFactory} from "./dataResolver";
 import {HttpMethod} from "./constants";
@@ -410,10 +410,13 @@ export class BaseService {
     }
 }
 
-export type RequestInterceptorFunction =
-    (value: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
-export type ResponseInterceptorFunction<T = any> =
-    (value: AxiosResponse<T>) => AxiosResponse<T> | Promise<AxiosResponse<T>>;
+export type RequestInterceptorFunction = (
+    value: InternalAxiosRequestConfig<any>
+) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;
+
+export type ResponseInterceptorFunction<T = any> = (
+    value: AxiosResponse<T>
+) => AxiosResponse<T> | Promise<AxiosResponse<T>>;
 
 abstract class BaseInterceptor {
     public onRejected(error: any) {
@@ -422,11 +425,14 @@ abstract class BaseInterceptor {
 }
 
 export abstract class RequestInterceptor extends BaseInterceptor {
-    public abstract onFulfilled(value: AxiosRequestConfig): AxiosRequestConfig | Promise<AxiosRequestConfig>;
+    public abstract onFulfilled(
+        value: InternalAxiosRequestConfig<any>
+    ): InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;
 }
-
 export abstract class ResponseInterceptor<T = any> extends BaseInterceptor {
-    public abstract onFulfilled(value: AxiosResponse<T>): AxiosResponse<T> | Promise<AxiosResponse<T>>;
+    public abstract onFulfilled(
+        value: AxiosResponse<T>
+    ): AxiosResponse<T> | Promise<AxiosResponse<T>>;
 }
 
 export class ServiceBuilder {
