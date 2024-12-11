@@ -5,9 +5,6 @@ import {DataResolverFactory} from "./dataResolver";
 import {HttpMethod} from "./constants";
 import {HttpMethodOptions} from "./decorators";
 import {isNode} from "./util";
-
-axios.defaults.withCredentials = true;
-
 export interface RequestConfig extends AxiosRequestConfig{
     extraMap?: Record<string, any>;
 }
